@@ -5,6 +5,7 @@ used in the project.
 """
 from uuid import uuid4
 import datetime
+import models
 
 
 class BaseModel:
@@ -14,23 +15,24 @@ class BaseModel:
     Attributes
     ----------
     id : string
-    unique idententifier
+        unique idententifier
     created_at : datetime.datetime
-    date and time of creation
+        date and time of creation
     updated_at : datetime.datetime
-    date and time when instance was last modified
+        date and time when instance was last modified
     """
 
     def __init__(self, *args, **kwargs):
-        if len(kwargs) == 0:
+        if kwargs:
+            self.create_from_dict(kwargs)
+        else:
             self.id = str(uuid4())
             self.created_at = datetime.datetime.now()
             self.updated_at = datetime.datetime.now()
-        else:
-            self.create_from_dict(kwargs)
+            models.storage.new(self)
 
     def create_from_dict(self, dictionary):
-        """Create Base model from dictionary."""
+        """Create BaseModel object from dictionary."""
 
         for key, value in dictionary.items():
             if key == '__class__':
@@ -40,10 +42,7 @@ class BaseModel:
             elif key == 'updated_at':
                 self.updated_at = datetime.datetime.fromisoformat(value)
             else:
-                if isinstance(value, str):
-                    exec(f"self.{key} = '{value}'")
-                else:
-                    exec(f"self.{key} = {value}")
+                setattr(self, key, value)
 
     def __str__(self):
         """Prints [<class name>] (<self.id>) <self.__dict__>."""
@@ -54,9 +53,11 @@ class BaseModel:
         """
         Updates the public instance attribute updated_at with the current
         datetime.
+        Saves to file using storage obj <type - FileStorage>
         """
 
         self.updated_at = datetime.datetime.now()
+        models.storage.save()
 
     def to_dict(self):
         """
