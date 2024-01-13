@@ -70,7 +70,6 @@ class HBNBCommand(cmd.Cmd):
                     return_list.append(str(obj))
             else:
                 return_list.append(str(obj))
-
         print(return_list)
 
     def do_destroy(self, arg):

@@ -5,11 +5,14 @@ import json
 import os.path
 from models.base_model import BaseModel
 from models.user import User
+<<<<<<< HEAD
 from models.state import State
 from models.city import City
 from models.amenity import Amenity
 from models.place import Place
 from models.review import Review
+=======
+>>>>>>> ad088e9680ab19fa6df8c932cac09bbccda5d74c
 
 
 class FileStorage:
