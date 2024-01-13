@@ -3,8 +3,12 @@
 
 import cmd
 import shlex
+import re
 from models import BaseModel, User, State, City, Amenity, Place, Review
 from models import storage
+
+
+METHODS_CMD = ["all", "show", "destroy", "update", "count"]
 
 
 class HBNBCommand(cmd.Cmd):
@@ -18,6 +22,42 @@ class HBNBCommand(cmd.Cmd):
     """
 
     prompt = '(hbnb) '
+
+    def default(self, line):
+        """
+        Process unknown commands by finding pattern
+        in available methods and passing them on to reconstruction
+        method
+        """
+        # <class_name>.<method>(<args>)
+        regex_txt = r"(\w+)\.(\w+)\((.*)\)"
+        match = re.match(regex_txt, line)
+        if not match:
+            return super().default(line)
+
+        class_name = match.group(1)
+        method_name = match.group(2)
+        args = match.group(3).split(',') if match.group(3) else []
+        if class_name not in METHODS_CMD:
+            return super().default(line)
+        self.re_arrange(class_name, method_name, args)
+
+    def re_arrange(self, class_name, method_name, args):
+        """
+        Re-construct command to fit in with command line interpreter
+        """
+        args_str = " ".join(args)
+        if len(args_str) == 0:
+            command = f"{method_name} {class_name}"
+        else:
+            command = f"{method_name} {class_name} {args_str}"
+        self.execute_command(command)
+
+    def execute_command(self, command):
+        """
+        Execute reconstructed command to the appropriate method
+        """
+        return self.onecmd(command)
 
     def do_update(self, arg):
         """
