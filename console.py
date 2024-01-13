@@ -5,7 +5,6 @@ import cmd
 import shlex
 from models import BaseModel, User, State, City, Amenity, Place, Review
 from models import storage
-import inspect
 
 
 class HBNBCommand(cmd.Cmd):
@@ -71,9 +70,7 @@ class HBNBCommand(cmd.Cmd):
                     return_list.append(str(obj))
             else:
                 return_list.append(str(obj))
-
-        for item in return_list:
-            print(item)
+        print(return_list)
 
     def do_destroy(self, arg):
         """
@@ -102,7 +99,7 @@ class HBNBCommand(cmd.Cmd):
         and prints the id.
         """
         if (_class := class_exists(classname)):
-            obj = globals().get(classname)()
+            obj = _class
             obj.save()
             print(obj.id)
 
@@ -131,9 +128,7 @@ def class_exists(class_to_check, type_to_check=BaseModel):
         return None
 
     _class = globals().get(class_to_check)
-    if class_to_check in globals()
-    and inspect.isclass(_class)
-    and issubclass(_class, type_to_check):
+    if class_to_check in globals() and issubclass(_class, type_to_check):
         return _class
     else:
         print("** class doesn't exist **")
