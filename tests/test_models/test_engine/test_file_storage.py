@@ -6,10 +6,19 @@ import unittest
 import re
 import os
 import json
+import random
+import uuid
 from models.engine.file_storage import FileStorage
 from models.base_model import BaseModel
+from models.user import User
+from models.state import State
+from models.city import City
+from models.amenity import Amenity
+from models.place import Place
+from models.review import Review
 
 test_path = "_tmp_path.json"
+CLASSES = ['BaseModel', 'User', 'State', 'City', 'Amenity', 'Place', 'Review']
 
 
 class BaseCase(unittest.TestCase):
@@ -196,19 +205,35 @@ class TestFileStorageReloadMethod(BaseCase):
         Inject dummy object in test_path
         """
         super().setUp()
-        self.injected_key = "BaseModel.12345"
-        self.injected_dict = {"my_number": 89, "__class__": "BaseModel",
-                              "updated_at": "2017-09-28T21:07:25.047381",
-                              "created_at": "2017-09-28T21:07:25.047372",
-                              "name": "My_First_Model",
-                              "id": "12345"}
-        dummy_obj_str = """{"BaseModel.12345": {"my_number": 89,\
-                "__class__": "BaseModel", "updated_at":\
-                "2017-09-28T21:07:25.047381", "created_at":\
-                "2017-09-28T21:07:25.047372", "name": "My_First_Model",\
-                "id": "12345"}}"""
+        """
+        1.create list of objects to test (TOP)
+        2.create a list of keys, and dicts
+        3.populate the filepath with the keys & dicts to look like contents
+            saved in .json file.
+        """
+        self.injected_items = dict()
+        for _class in CLASSES:
+            _id = uuid.uuid4()
+            key = f"{_class}.{_id}"
+            _dict = {
+                "__class__": "{}".format(_class),
+                "id": "{}".format(_id),
+                "updated_at": "2017-09-28T21:07:25.047381",
+                "created_at": "2017-09-28T21:07:25.047372",
+                "integer": 89,
+                "string": "Our string",
+                "float": 24.8,
+                "list": [
+                    str(uuid.uuid4()),
+                    str(uuid.uuid4()),
+                    str(uuid.uuid4())
+                ]
+            }
+
+            self.injected_items[key] = _dict
+
         with open(test_path, 'w') as fp:
-            fp.write(dummy_obj_str)
+            json.dump(self.injected_items, fp)
 
     def test__objects_updates(self):
         """Check that __objects updates when reload() is executed."""
@@ -219,15 +244,18 @@ class TestFileStorageReloadMethod(BaseCase):
                             msg="__updates dict same as before reload")
 
     def test_reload_obj_key(self):
-        """Check that injected object key exists in __objects."""
+        """Check that injected object keys exist in __objects."""
         self.file_storage_obj.reload()
-        self.assertIn(self.injected_key, FileStorage._FileStorage__objects)
+        for key in self.injected_items:
+            self.assertIn(key, FileStorage._FileStorage__objects)
 
     def test_reload_obj_dict(self):
         """Check that the injected obj dict reflects in __objects."""
         self.file_storage_obj.reload()
-        if self.injected_key in FileStorage._FileStorage__objects:
-            _key = self.injected_key
-            _dict = self.injected_dict
-            retrieved_obj = FileStorage._FileStorage__objects[_key]
-            self.assertEqual(_dict, retrieved_obj.to_dict())
+        """
+        4.loop through list of keys
+        """
+        for key, _dict in self.injected_items.items():
+            if key in FileStorage._FileStorage__objects:
+                retrieved_obj = FileStorage._FileStorage__objects[key]
+                self.assertEqual(_dict, retrieved_obj.to_dict())
