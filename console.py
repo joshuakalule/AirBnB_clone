@@ -5,6 +5,7 @@ import cmd
 import shlex
 from models import BaseModel, User, State, City, Amenity, Place, Review
 from models import storage
+import inspect
 
 
 class HBNBCommand(cmd.Cmd):
@@ -130,7 +131,9 @@ def class_exists(class_to_check, type_to_check=BaseModel):
         return None
 
     _class = globals().get(class_to_check)
-    if class_to_check in globals() and issubclass(_class, type_to_check):
+    if class_to_check in globals()
+    and inspect.isclass(_class)
+    and issubclass(_class, type_to_check):
         return _class
     else:
         print("** class doesn't exist **")
