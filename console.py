@@ -99,7 +99,7 @@ class HBNBCommand(cmd.Cmd):
         and prints the id.
         """
         if (_class := class_exists(classname)):
-            obj = _class
+            obj = _class()
             obj.save()
             print(obj.id)
 
