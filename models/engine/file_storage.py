@@ -49,5 +49,5 @@ class FileStorage:
             with open(FileStorage.__file_path, 'r') as fp:
                 temp_dict = json.load(fp)
         for key, _dict in temp_dict.items():
-            _class = globals()[_dict['__class__']]
+            _class = globals().get(_dict['__class__'])
             FileStorage.__objects[key] = _class(**_dict)

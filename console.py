@@ -71,7 +71,8 @@ class HBNBCommand(cmd.Cmd):
             else:
                 return_list.append(str(obj))
 
-        print(return_list)
+        for item in return_list:
+            print(item)
 
     def do_destroy(self, arg):
         """
@@ -100,7 +101,7 @@ class HBNBCommand(cmd.Cmd):
         and prints the id.
         """
         if (_class := class_exists(classname)):
-            obj = _class()
+            obj = globals().get(classname)()
             obj.save()
             print(obj.id)
 
