@@ -7,7 +7,7 @@ from models.base_model import BaseModel
 class Review(BaseModel):
     """
     Class for reviews that inherits from BaseModel.
-    
+
     Attributes
     ----------
     place_id : str
