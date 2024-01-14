@@ -4,6 +4,7 @@
 import cmd
 import shlex
 import re
+import json
 from models import BaseModel, User, State, City, Amenity, Place, Review
 from models import storage
 
@@ -23,6 +24,32 @@ class HBNBCommand(cmd.Cmd):
 
     prompt = '(hbnb) '
 
+    def update_dict(self, class_name, obj_id, dict_str):
+        """
+        Update an instance based on the class name and id using
+        a dictionary representation Save the change into the JSON file
+        """
+        obj_id = obj_id.strip('"')
+        key, instance = retrieve(class_name, obj_id)
+        if not key:
+            print(obj_id)
+            return
+        try:
+            dict_str = str(dict_str)
+            dict_str = dict_str.replace("'", "\"")
+            attr_dict = json.loads(dict_str)
+        except json.JSONDecodeError:
+            print("** invalid dictionary **")
+            return
+
+        for attr_name, attr_value in attr_dict.items():
+            if hasattr(instance, attr_name):
+                attr_type = type(getattr(instance, attr_name))
+                setattr(instance, attr_name, attr_type(attr_value))
+            else:
+                setattr(instance, attr_name, attr_value)
+        instance.save()
+
     def count(self, class_name):
         """
         retrieve the number of instances of a class
@@ -41,12 +68,17 @@ class HBNBCommand(cmd.Cmd):
         """
         # <class_name>.<method>(<args>)
         regex_txt = r"(\w+)\.(\w+)\((.*)\)"
+        # <class name>.update(<id>, <dictionary representation>)
+        pattern = r"\(([^)]+),\s*({.*})\)"
         match = re.match(regex_txt, line)
+
         if not match:
             return super().default(line)
 
         class_name = match.group(1)
         method_name = match.group(2)
+        # search for id and dictionary representation
+        update_args = re.search(pattern, line)
         args = match.group(3).split(',') if match.group(3) else []
 
         if method_name not in METHODS_CMD:
@@ -54,6 +86,13 @@ class HBNBCommand(cmd.Cmd):
 
         if method_name == "count":
             self.count(class_name)
+        elif method_name == "update":
+            if update_args:
+                obj_id = update_args.group(1)
+                dict_str = update_args.group(2)
+                self.update_dict(class_name, obj_id, dict_str)
+            else:
+                self.re_arrange(class_name, method_name, args)
         else:
             self.re_arrange(class_name, method_name, args)
 
