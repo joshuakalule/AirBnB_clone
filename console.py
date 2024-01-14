@@ -23,6 +23,16 @@ class HBNBCommand(cmd.Cmd):
 
     prompt = '(hbnb) '
 
+    def count(self, class_name):
+        """
+        retrieve the number of instances of a class
+        """
+        count_obj = 0
+        for key in storage.all():
+            if key.startswith(class_name):
+                count_obj += 1
+        print(count_obj)
+
     def default(self, line):
         """
         Process unknown commands by finding pattern
@@ -38,9 +48,14 @@ class HBNBCommand(cmd.Cmd):
         class_name = match.group(1)
         method_name = match.group(2)
         args = match.group(3).split(',') if match.group(3) else []
-        if class_name not in METHODS_CMD:
+
+        if method_name not in METHODS_CMD:
             return super().default(line)
-        self.re_arrange(class_name, method_name, args)
+
+        if method_name == "count":
+            self.count(class_name)
+        else:
+            self.re_arrange(class_name, method_name, args)
 
     def re_arrange(self, class_name, method_name, args):
         """
