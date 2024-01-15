@@ -16,9 +16,9 @@ from models.city import City
 from models.amenity import Amenity
 from models.place import Place
 from models.review import Review
+from tests import CLASSES
 
 test_path = "_tmp_path.json"
-CLASSES = ['BaseModel', 'User', 'State', 'City', 'Amenity', 'Place', 'Review']
 
 
 class BaseCase(unittest.TestCase):
