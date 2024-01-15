@@ -32,10 +32,9 @@ class HBNBCommand(cmd.Cmd):
         obj_id = obj_id.strip('"')
         key, instance = retrieve(class_name, obj_id)
         if not key:
-            print(obj_id)
             return
         try:
-            dict_str = str(dict_str)
+            # dict_str = str(dict_str)
             dict_str = dict_str.replace("'", "\"")
             attr_dict = json.loads(dict_str)
         except json.JSONDecodeError:
