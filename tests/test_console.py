@@ -170,6 +170,13 @@ class TestCountCommand(BaseCase):
             for i in range(count):
                 obj = eval(f"{_class}()")
                 cls.all_str_list.append(str(obj))
+    
+    @classmethod
+    def tearDownClass(cls):
+        """clean-up"""
+        super().setUpClass()
+        del cls.counts
+        del cls.all_str_list
 
     def test_count_return(self, stdout):
         """check that the count returns a number."""
@@ -296,6 +303,13 @@ class TestConsoleAllCommand(BaseCase):
             for i in range(count):
                 obj = eval(f"{_class}()")
                 cls.all_str_list.append(str(obj))
+
+    @classmethod
+    def tearDownClass(cls):
+        """clean-up"""
+        super().setUpClass()
+        del cls.counts
+        del cls.all_str_list
 
     def test_advanced_returns_list_look_alike(self, stdout):
         """check the advanced call <classname>.all()."""
