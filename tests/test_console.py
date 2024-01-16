@@ -148,6 +148,42 @@ EOF  all  create  destroy  help  quit  show  update\n\n'''
         self.assertEqual('', stdout.getvalue())
 
 
+@patch('sys.stdout', new_callable=StringIO)
+class TestCountCommand(BaseCase):
+    """Test the count command."""
+
+    @classmethod
+    def setUpClass(cls):
+        """Create objects for all classes."""
+        super().setUpClass()
+        cls.counts = {
+            'BaseModel': 1,
+            'User': 3,
+            'State': 4,
+            'City': 5,
+            'Place': 10,
+            'Amenity': 20,
+            'Review': 50
+        }
+        cls.all_str_list = list()
+        for _class, count in cls.counts.items():
+            for i in range(count):
+                obj = eval(f"{_class}()")
+                cls.all_str_list.append(str(obj))
+
+    def test_count_return(self, stdout):
+        """check that the count returns a number."""
+        for _class in TestCountCommand.counts:
+            self.onecmd(f"{_class}.count()")
+
+            got_count = stdout.getvalue().replace('\n', '')
+            expected_count = str(TestCountCommand.counts[_class])
+            msg = f"{_class}: expected: {expected_count} got: {got_count}"
+            self.assertEqual(got_count, expected_count, msg=msg)
+            stdout.seek(0)
+            stdout.truncate(0)
+
+
 class TestUpdateCommand(BaseCase):
     """Test update command."""
 
