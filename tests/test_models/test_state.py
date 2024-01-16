@@ -76,7 +76,7 @@ class TestStateAttributes(TestBase):
 
     def test_name(self):
         """Check that name attribute is a str object."""
-        if hasattr(self, 'name'):
+        if hasattr(self.obj, 'name'):
             self.assertIsInstance(self.obj.name, str)
 
 

@@ -76,17 +76,20 @@ class TestReviewAttributes(TestBase):
 
     def test_place_id(self):
         """Check that place_id attribute is a str object."""
-        if hasattr(self, 'place_id'):
+        self.assertTrue(hasattr(self.obj, 'place_id'))
+        if hasattr(self.obj, 'place_id'):
             self.assertIsInstance(self.obj.place_id, str)
 
     def test_user_id(self):
         """Check that user_id attribute is a str object."""
-        if hasattr(self, 'user_id'):
+        self.assertTrue(hasattr(self.obj, 'user_id'))
+        if hasattr(self.obj, 'user_id'):
             self.assertIsInstance(self.obj.user_id, str)
 
     def test_text(self):
+        self.assertTrue(hasattr(self.obj, 'text'))
         """Check that text attribute is a str object."""
-        if hasattr(self, 'text'):
+        if hasattr(self.obj, 'text'):
             self.assertIsInstance(self.obj.text, str)
 
 

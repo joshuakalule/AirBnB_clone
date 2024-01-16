@@ -76,12 +76,14 @@ class TestCityAttributes(TestBase):
 
     def test_state_id(self):
         """Check that the state_id attr is a string."""
-        if hasattr(self, 'state_id'):
+        self.assertTrue(hasattr(self.obj, 'state_id'))
+        if hasattr(self.obj, 'state_id'):
             self.assertIsInstance(self.obj.state_id, str)
 
     def test_name(self):
         """Check that the name attr is a string."""
-        if hasattr(self, 'name'):
+        self.assertTrue(hasattr(self.obj, 'name'))
+        if hasattr(self.obj, 'name'):
             self.assertIsInstance(self.obj.name, str)
 
 

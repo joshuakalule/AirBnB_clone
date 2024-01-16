@@ -76,57 +76,57 @@ class TestPlaceAttributes(TestBase):
 
     def test_city_id(self):
         """Check that city_id attribute is a str object."""
-        if hasattr(self, 'city_id'):
+        if hasattr(self.obj, 'city_id'):
             self.assertIsInstance(self.obj.city_id, str)
 
     def test_user_id(self):
         """Check that user_id attribute is a str object."""
-        if hasattr(self, 'user_id'):
+        if hasattr(self.obj, 'user_id'):
             self.assertIsInstance(self.obj.user_id, str)
 
     def test_name(self):
         """Check that name attribute is a str object."""
-        if hasattr(self, 'name'):
+        if hasattr(self.obj, 'name'):
             self.assertIsInstance(self.obj.name, str)
 
     def test_description(self):
         """Check that description attribute is a str object."""
-        if hasattr(self, 'description'):
+        if hasattr(self.obj, 'description'):
             self.assertIsInstance(self.obj.description, str)
 
     def test_number_rooms(self):
         """Check that number_rooms attribute is an int object."""
-        if hasattr(self, 'number_rooms'):
+        if hasattr(self.obj, 'number_rooms'):
             self.assertIsInstance(self.obj.number_rooms, int)
 
     def test_number_bathrooms(self):
         """Check that number_bathrooms attribute is an int object."""
-        if hasattr(self, 'number_bathrooms'):
+        if hasattr(self.obj, 'number_bathrooms'):
             self.assertIsInstance(self.obj.number_bathrooms, int)
 
     def test_max_guest(self):
         """Check that max_guest attribute is an int object."""
-        if hasattr(self, 'max_guest'):
+        if hasattr(self.obj, 'max_guest'):
             self.assertIsInstance(self.obj.max_guest, int)
 
     def test_price_by_night(self):
         """Check that price_by_night attribute is an int object."""
-        if hasattr(self, 'price_by_night'):
+        if hasattr(self.obj, 'price_by_night'):
             self.assertIsInstance(self.obj.price_by_night, int)
 
     def test_latitude(self):
         """Check that latitude attribute is a float object."""
-        if hasattr(self, 'latitude'):
+        if hasattr(self.obj, 'latitude'):
             self.assertIsInstance(self.obj.latitude, float)
 
     def test_longitude(self):
         """Check that longitude attribute is a float object."""
-        if hasattr(self, 'longitude'):
+        if hasattr(self.obj, 'longitude'):
             self.assertIsInstance(self.obj.longitude, float)
 
     def test_amenity_ids(self):
         """Check that amenity_ids attribute is a list of strings."""
-        if not hasattr(self, 'amenity_ids'):
+        if not hasattr(self.obj, 'amenity_ids'):
             return
         self.assertIsInstance(self.obj.amenity_ids, list)
 

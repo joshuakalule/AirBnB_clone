@@ -76,22 +76,22 @@ class TestUserAttributes(TestBase):
 
     def test_email(self):
         """Check that the email attr is a string."""
-        if hasattr(self, 'email'):
+        if hasattr(self.obj, 'email'):
             self.assertIsInstance(self.obj.email, str)
 
     def test_password(self):
         """Check that the password attr is a string."""
-        if hasattr(self, 'password'):
+        if hasattr(self.obj, 'password'):
             self.assertIsInstance(self.obj.password, str)
 
     def test_first_name(self):
         """Check that the first_name attr is a string."""
-        if hasattr(self, 'first_name'):
+        if hasattr(self.obj, 'first_name'):
             self.assertIsInstance(self.obj.first_name, str)
 
     def test_last_name(self):
         """Check that the last_name attr is a string."""
-        if hasattr(self, 'last_name'):
+        if hasattr(self.obj, 'last_name'):
             self.assertIsInstance(self.obj.last_name, str)
 
 

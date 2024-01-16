@@ -76,7 +76,8 @@ class TestAmenityAttributes(TestBase):
 
     def test_name(self):
         """Check that name attribute is a str object."""
-        if hasattr(self, 'name'):
+        self.assertTrue(hasattr(self.obj, 'name'))
+        if hasattr(self.obj, 'name'):
             self.assertIsInstance(self.obj.name, str)
 
 
