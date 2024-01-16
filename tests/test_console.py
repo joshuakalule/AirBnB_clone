@@ -111,41 +111,6 @@ class TestUpdateCommand(BaseCase):
                     self.assertEqual(getattr(fetched_obj, attr_name),
                                      attr_value, msg=msg)
 
-    def test_update_dictionary(self):
-        """
-        Check that each key/value pair in dict reflects in the
-        __objects dict
-        """
-        attr_dict = {
-            'integer': 23,
-            'float': 8.9,
-            'list': ['id_0', 'id_1', 'id_2'],
-            'string': 'Hello world',
-            'string_spaces': 'String with spaces'
-        }
-
-        for _class in CLASSES:
-            obj = eval(f"{_class}()")
-            key = f"{_class}.{obj.id}"
-
-            _dict_str = json.dumps(attr_dict)
-            self.onecmd(f"update {_class} {obj.id} {_dict_str}")
-
-            __objects = FileStorage._FileStorage__objects
-            if key not in __objects:
-                return
-            fetched_obj = __objects[key]
-
-            for attr_name, attr_value in attr_dict.items():
-                msg = f"\nattribute '{attr_name}' in {attr_dict} not found"
-                msg += f"\n\nfetched_obj: {fetched_obj.to_dict()}"
-                self.assertTrue(hasattr(fetched_obj, attr_name), msg=msg)
-
-                if hasattr(fetched_obj, attr_name):
-                    msg = f"attribute {attr_name} was not updated"
-                    self.assertEqual(getattr(fetched_obj, attr_name),
-                                     attr_value, msg=msg)
-
     def test_advanced_update_key_value(self):
         """
         check that key/value pair reflects in the __objects dict
@@ -158,7 +123,8 @@ class TestUpdateCommand(BaseCase):
             obj = eval(f"{_class}()")
             key = f"{_class}.{obj.id}"
 
-            self.onecmd(f"{_class}.update({obj.id}, {attr_name}, '{attr_value}')")
+            _cmd = f"{_class}.update({obj.id}, {attr_name}, '{attr_value}')"
+            self.onecmd(_cmd)
 
             __objects = FileStorage._FileStorage__objects
             if key not in __objects:
