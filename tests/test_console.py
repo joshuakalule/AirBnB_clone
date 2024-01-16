@@ -170,7 +170,7 @@ class TestCountCommand(BaseCase):
             for i in range(count):
                 obj = eval(f"{_class}()")
                 cls.all_str_list.append(str(obj))
-    
+
     @classmethod
     def tearDownClass(cls):
         """clean-up"""
