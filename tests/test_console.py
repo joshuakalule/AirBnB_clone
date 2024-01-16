@@ -4,6 +4,7 @@
 import os
 import unittest
 import json
+import console
 from unittest.mock import patch, MagicMock
 from io import StringIO
 from console import HBNBCommand
@@ -19,7 +20,14 @@ from tests import CLASSES
 
 test_path = "_tmp_path.json"
 PROMPT_STR = "(hbnb) "
-patch.TEST_PREFIX = 'test_'
+CONSOLE_METHODS = [
+    'update_dict', 'count', 'default', 're_arrange', 'execute_command',
+    'do_update', 'do_all', 'do_destroy', 'do_show', 'do_create', 'do_EOF',
+    'do_quit', 'emptyline'
+]
+MODULE_METHODS = [
+    'class_exists', 'retrieve', 'parse'
+]
 
 
 class BaseCase(unittest.TestCase):
@@ -54,14 +62,22 @@ class BaseCase(unittest.TestCase):
         if os.path.exists(test_path):
             os.remove(test_path)
 
+    def setUp(self):
+        """
+        set onecmd
+        """
+        self.onecmd = HBNBCommand().onecmd
+
     def teardown(self):
         """
         clear FileStorage.__objects
         rm test_path
+        delete onecmd
         """
         FileStorage._FileStorage__objects.clear()
         if os.path.exists(test_path):
             os.remove(test_path)
+        del self.onecmd
 
 
 class TestConsoleAttributes(BaseCase):
@@ -70,6 +86,66 @@ class TestConsoleAttributes(BaseCase):
     def test_prompt(self):
         """Check that the prompt is PROMPT_STR."""
         self.assertEqual(PROMPT_STR, HBNBCommand.prompt)
+
+
+class TestPycodestyle(BaseCase):
+    """Test pycodestyle style and documentation."""
+
+    @patch('sys.stdout', new_callable=StringIO)
+    def test_style(self, stdout):
+        """Test pycodetsyle style."""
+        os.system("pycodestyle console.py")
+        self.assertEqual('', stdout.getvalue(), "fix pycodestyle errors")
+
+    def test_console_documentation(self):
+        """check that console has documentation."""
+        doc = console.__doc__
+        self.assertIsNotNone(doc, msg="console.py has no documentation")
+
+    def test_class_documentation(self):
+        """check class docs."""
+        doc = console.HBNBCommand.__doc__
+        self.assertIsNotNone(doc, msg="HBNBCommand class has no documentation")
+
+    def test_class_methods(self):
+        """check class method docs."""
+        for func in CONSOLE_METHODS:
+            doc = eval(f"HBNBCommand.{func}.__doc__")
+            self.assertIsNotNone(doc, msg=f"HBNBCommand.{func} has no doc")
+
+    def test_module_methods(self):
+        """check module method docs."""
+        for func in MODULE_METHODS:
+            doc = eval(f"console.{func}.__doc__")
+            self.assertIsNotNone(doc, msg=f"console.{func} has no doc")
+
+
+@patch('sys.stdout', new_callable=StringIO)
+class TestConsoleGenericMethods(BaseCase):
+    """Test generic methods in the console."""
+
+    def test_help_cmd(self, stdout):
+        """check output of help."""
+        expected_str = '''
+Documented commands (type help <topic>):
+========================================
+EOF  all  create  destroy  help  quit  show  update\n\n'''
+        HBNBCommand().onecmd("help")
+        self.assertEqual(stdout.getvalue(), expected_str)
+
+    def test_EOF(self, stdout):
+        """check that Ctrl-D quits the CLI."""
+        pass
+
+    def test_emptyline(self, stdout):
+        """check that emptyline does nothing."""
+        self.onecmd("\n")
+        self.assertEqual('', stdout.getvalue())
+
+    def test_quit(self, stdout):
+        """test that quit exits the CLI."""
+        self.onecmd("quit")
+        self.assertEqual('', stdout.getvalue())
 
 
 class TestUpdateCommand(BaseCase):
