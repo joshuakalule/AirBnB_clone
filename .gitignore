@@ -2,4 +2,4 @@
 **/__pycache__/
 *.swp
 file.json
-~/AirBnB_clone/web_static/template.html
+template.html
